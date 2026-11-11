@@ -1,0 +1,41 @@
+package yio.tro.antiyoy.ai;
+
+import yio.tro.antiyoy.gameplay.GameController;
+import yio.tro.antiyoy.gameplay.Hex;
+import yio.tro.antiyoy.gameplay.Province;
+
+public class AiHardGenericRules extends ArtificialIntelligenceGeneric{
+
+
+    public AiHardGenericRules(GameController gameController, int fraction) {
+        super(gameController, fraction);
+    }
+
+
+    @Override
+    public void makeMove() {
+        moveUnits();
+
+        spendMoneyAndMergeUnits();
+
+        moveAfkUnits();
+    }
+
+
+    @Override
+    void tryToBuildTowers(Province province) {
+        while (province.hasMoneyForTower()) {
+            int moneyBefore = province.money;
+            Hex hex = findHexThatNeedsTower(province);
+            if (hex == null) return;
+
+            if (province.hasMoneyForStrongTower()) {
+                gameController.fieldManager.buildStrongTower(province, hex);
+                if (province.money == moneyBefore) return;
+                continue;
+            }
+            gameController.fieldManager.buildTower(province, hex);
+            if (province.money == moneyBefore) return;
+        }
+    }
+}

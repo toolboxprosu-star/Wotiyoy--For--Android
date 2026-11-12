@@ -123,3 +123,4 @@ tasks.register('run', Exec) {
 }
 
 eclipse.project.name = appName + "-android"
+implementation project(':core')
